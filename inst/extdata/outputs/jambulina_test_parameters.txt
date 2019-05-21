@@ -1,25 +1,25 @@
 NCOLS 100
 NROWS 79
 OUTPUT_FOLDER
-C:/Users/R/win-library/3.2/AdaptR/extdata/outputs/
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/outputs/
 OUTPUT_ROOTNAME jambulina_test
 WRITE_EACH_STEP 0
-NUM_TIME_POINTS 12
+NUM_TIME_POINTS 159
 NUM_ENVIRONMENT_VARIABLES 2
 ENV_GRIDS_FOLDER
-C:/Users/R/win-library/3.2/AdaptR/extdata/compact_grids/
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/compact_grids/
 ENV_GRIDS_NAMEFILE
-C:/Users/R/win-library/3.2/AdaptR/extdata/species_inputs/compact_series_names.txt
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/species_inputs/compact_series_names.txt
 SPECIES_OCCURRENCE_GRID
-C:/Users/R/win-library/3.2/AdaptR/extdata/species_inputs/demo_jambulia_initial_distribution.asc
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/species_inputs/demo_jambulia_initial_distribution.asc
 MIN_SURVIVAL_PERCENTAGE
 5
 RESIDENT_POPULATION_ATTRIBUTE_WEIGHTING
 1000
 DISPERSAL_NEIGHBOURHOOD_FILE
-C:/Users/R/win-library/3.2/AdaptR/extdata/species_inputs/Dispersal_relfile_L1_K1_rad5.dna
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/species_inputs/Dispersal_relfile_L1_K1_rad5.dna
 SPECIES_LOCATION_FILE
-C:/Users/R/win-library/3.2/AdaptR/extdata/species_inputs/demo_locations_out.txt
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/species_inputs/demo_locations_out.txt
 ##ENV_VARIABLE1-MaxTemp##
 LOWFUNDLIMIT
 19.47

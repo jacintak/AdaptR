@@ -30,77 +30,12 @@
 #' @param phenotypic.sd.value Where relevant, a list of length n.env.vars specifying the initial phenotypic standard deviation values to be applied for all grid cells, for each environmental tolerance threshold.
 #' @param plasticity A list of length n.env.vars specifying the plasticity in the threshold tolerance trait for each environmental variable.
 #' @return A set of output files written in the specified folder, each containing the run.name
-#' @examples
-#' ## Complete example of the multiple steps in applying AdaptR using data example provided for Drosophila jambulina
-#'
-#' # 1. Set the filepath to the example data set
-#' filepath.data <- system.file("extdata", package="AdaptR")
-#'
-#' # 2. Create text files to describe the file path to each input variable, and the output variable
-#' write.table((file.path(filepath.data,"Tmax",paste0("Tmax",seq(1:159),".asc"))), file = file.path(filepath.data,"Tmax","Tmax_filenames.txt"), eol = "\n", row.names = FALSE, col.names = FALSE, quote=FALSE )
-#' write.table((file.path(filepath.data,"Habitat",paste0("Habitat",seq(1:159),".asc"))), file = file.path(filepath.data,"Habitat","Habitat_filenames.txt"), eol = "\n", row.names = FALSE, col.names = FALSE, quote=FALSE )
-#' write.table((file.path(filepath.data,"compact_grids",paste0("demo_compact_grids_T",seq(1:159)))), file = file.path(filepath.data,"compact_grids","demo_compact_grids_output_filenames.txt"), eol = "\n", row.names = FALSE, col.names = FALSE, quote=FALSE )
-#' 
-#' # 3. Run the grid compactor
-#' CompactGrids(compactor.parameter.file.name = file.path(filepath.data,"species_inputs","Jambulina__grid_compactor_parameter_file.txt"),
-#'              ncols = 100,
-#'              nrows = 79,
-#'              n.env.vars = 2,
-#'              n.time.points = 159,
-#'              raw.env.grids.name.files = c(file.path(filepath.data,"Tmax","Tmax_filenames.txt"),file.path(filepath.data,"Habitat","Habitat_filenames.txt")),
-#'              output.env.name.file = file.path(filepath.data,"compact_grids","demo_compact_grids_output_filenames.txt"))
-#'
-#' # 4. Generate a dispersal kernel for the drosophila example
-#' filepath.data <- system.file("extdata", package="AdaptR")
-#' Dispersal_Neighbourhood(radius=5, 
-#'                        type="neg.power", 
-#'                        params=c(1,1), 
-#'                        output.name="Dispersal_relfile_L1_K1_rad5",
-#'                        output.directory=file.path(filepath.data,"species_inputs"),
-#'                        dispersal.plot=TRUE)  
-#' 
-#' # 5. Create text files to describe the file path to the compact grids
-#' write.table(paste0("demo_compact_grids_T",rep(1:159, length.out=159)), file = file.path(filepath.data,"species_inputs","compact_series_names.txt"), eol = "\n", row.names = FALSE, col.names = FALSE, quote=FALSE )
-#' 
-#' # 6. Run the AdaptR model
-#' AdaptR(run.name = "jambulina_test",
-#'         parameter.file.name = file.path(filepath.data,"outputs","jambulina_test_parameters.txt"),
-#'         ncols = 100,
-#'         nrows = 79,
-#'         output.folder.path = file.path(filepath.data,"outputs"),
-#'         verbose.outputs = FALSE,
-#'         n.time.points = 159,
-#'         n.env.vars = 2,
-#'         env.vars.names = c("MaxTemp", "Other_Maxent"),
-#'         env.grids.folder.path = file.path(filepath.data,"compact_grids"),
-#'         env.grids.name.file = file.path(filepath.data,"species_inputs","compact_series_names.txt"),
-#'         species.initial.grid = file.path(filepath.data,"species_inputs","demo_jambulia_initial_distribution.asc"),
-#'         minimum.survival.percentage = 5,
-#'         resident.population.weighting = 1000,
-#'         dispersal.neighbourhood.file = file.path(filepath.data,"species_inputs","Dispersal_relfile_L1_K1_rad5.dna"),
-#'         species.location.file = file.path(filepath.data,"species_inputs","demo_locations_out.txt"),
-#'         env.lower.thresholds = c(19.47,0.99),
-#'         env.upper.thresholds = c(37.94547,1.01),
-#'         env.low.adaptation = c(FALSE,FALSE),
-#'         env.high.adaptation = c(TRUE,FALSE),
-#'         adapt.limit = c(40,0),
-#'         heritability = c(0.53,0),
-#'         fitness.cost = c(0.05,0),
-#'         adapt.threshold.grids = c(FALSE,FALSE),
-#'         phenotypic.sd.grid = c(FALSE,FALSE),
-#'         phenotypic.sd.value = c(1.106,0),
-#'         plasticity = c(1.106,0))
-#'
-#' # 7. Map the predictions of the model (at the last time point)
-#' map.single.run(output.folder.path = file.path(filepath.data,"outputs"), 
-#'                run.name = "jambulina_test")
-#'
-#'
-#' @importFrom Rcpp evalCpp
-#' @useDynLib AdaptR
+#' @importFrom Rcpp evalCpp sourceCpp
+#' @useDynLib AdaptR, .registration = TRUE
+NULL
+
 #' @export
-AdaptR <- 
-function(run.name,
+AdaptR <- function(run.name,
                  parameter.file.name,
                  ncols,
                  nrows,
@@ -128,8 +63,7 @@ function(run.name,
                  phenotypic.sd.grid,
                  phenotypic.sd.grid.names,
                  phenotypic.sd.value,
-                 plasticity)
-{
+                 plasticity){
   ##_____________________________________________________________________________________##
   ## First, let's run some sanity checks on the parameters
   if(missing(run.name))
@@ -281,14 +215,11 @@ function(run.name,
   ## Now, write the parameter file...
   parameter.file = parameter.file.name                    ##CHANGED TO TAKE A SPECIFIED PARAMETER FILE NAME
   jobscript = file(parameter.file,'w')   # 'wb' might create a "unix-friendly" binary mode
-  if(missing(plasticity))
-  {
+  if(missing(plasticity)){
     plasticity <- rep(0,times=n.env.vars)
   }
-  if(!missing(plasticity))
-  {
-    if(length(plasticity) < n.env.vars)
-    {
+  if(!missing(plasticity))  {
+    if(length(plasticity) < n.env.vars)    {
       warning("No plasticity values are specified for some environment variables, so no plasticity will be implemented for those variables.")
       plasticity <- c(plasticity,rep(0,times=(n.env.vars-length(plasticity))))
     }
@@ -298,14 +229,11 @@ function(run.name,
   writeLines("OUTPUT_FOLDER", con = jobscript)
   writeLines(output.folder.path, con = jobscript)
   writeLines(paste0("OUTPUT_ROOTNAME ",run.name), con = jobscript)
-  if(verbose.outputs)
-  {
-    writeLines("WRITE_EACH_STEP 1", con = jobscript)  
-  }
-  else
-  {
+  if(verbose.outputs){
+    writeLines("WRITE_EACH_STEP 1", con = jobscript)
+    }  else{
     writeLines("WRITE_EACH_STEP 0", con = jobscript)
-  }  
+  }
   writeLines(paste0("NUM_TIME_POINTS ",n.time.points), con = jobscript)
   writeLines(paste0("NUM_ENVIRONMENT_VARIABLES ", n.env.vars), con = jobscript)
   writeLines("ENV_GRIDS_FOLDER", con = jobscript)
@@ -323,8 +251,7 @@ function(run.name,
   writeLines("SPECIES_LOCATION_FILE", con = jobscript)
   writeLines(species.location.file, con = jobscript)
   # Now loop through each env variable, and write it's details to the parameter file
-  for(i.env in 1:n.env.vars)
-  {
+  for(i.env in 1:n.env.vars)  {
     writeLines(paste0("##ENV_VARIABLE",i.env,"-",env.vars.names[i.env],"##"), con = jobscript)
     writeLines("LOWFUNDLIMIT", con = jobscript)
     writeLines(as.character(env.lower.thresholds[i.env]), con = jobscript)
@@ -406,15 +333,15 @@ function(run.name,
   # load the dll
 #  package.path<-system.file(package="AdaptR")
 #  r_arch <- .Platform$r_arch
-#  file.path.source<-file.path(package.path, "libs", r_arch, "main.dll")
+#  file.path.source<-file.path(package.path, "libs", r_arch, "AdaptR.dll")
   # load the dll
 #  dyn.load(file.path.source)
   # call the AdaptR function in the dll
-#  AdaptR.out <- .C("AdaptR",  argv = as.character(c(parameter.file)), arg_i_catch = as.integer(c(-3,0)))
+#  AdaptR.out <- .C("rcpp_AdaptR",  argv = as.character(c(parameter.file)), arg_i_catch = as.integer(c(-3,0)))
   # unload the dll
 #  dyn.unload(file.path.source)
   ##_____________________________________________________________________________________##
-  AdaptR.out <- rcpp_AdaptR(parameter.file)
+  AdaptR.out <- AdaptR:::rcpp_AdaptR(parameter.file)
   
   ##_____________________________________________________________________________________##    
   # Now provide some output

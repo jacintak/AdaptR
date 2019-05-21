@@ -93,4 +93,3 @@ map.single.run(output.folder.path = file.path(filepath.data,"outputs"),
 
 
 }
-
