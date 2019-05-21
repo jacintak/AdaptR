@@ -331,26 +331,28 @@ AdaptR <- function(run.name,
   
   ##_____________________________________________________________________________________##
   # load the dll
-#  package.path<-system.file(package="AdaptR")
-#  r_arch <- .Platform$r_arch
-#  file.path.source<-file.path(package.path, "libs", r_arch, "AdaptR.dll")
-  # load the dll
-#  dyn.load(file.path.source)
-  # call the AdaptR function in the dll
-#  AdaptR.out <- .C("rcpp_AdaptR",  argv = as.character(c(parameter.file)), arg_i_catch = as.integer(c(-3,0)))
-  # unload the dll
+ #package.path<-system.file(package="AdaptR")
+ #r_arch <- .Platform$r_arch
+#file.path.source<-file.path(package.path, "libs", r_arch, "AdaptR.dll")
+  #load the dll
+# dyn.load(file.path.source)
+  #call the AdaptR function in the dll
+# AdaptR.out <- .C("rcpp_AdaptR",  argv = as.character(c(parameter.file)), arg_i_catch = as.integer(c(-3,0)))
+ #AdaptR.out <- .Call("rcpp_AdaptR",  argv = as.character(c(parameter.file)), arg_i_catch = as.integer(c(-3,0)))
+ # unload the dll
 #  dyn.unload(file.path.source)
+#  Rcpp::sourceCpp("C:\\Users\\admin\\Documents\\TCD\\AdaptR\\src\\RcppExports.cpp")
   ##_____________________________________________________________________________________##
-  AdaptR.out <- AdaptR:::rcpp_AdaptR(parameter.file)
+ # AdaptR.out <- rcpp_AdaptR(parameter.file)
   
   ##_____________________________________________________________________________________##    
   # Now provide some output
-  if(AdaptR.out == -3 )
-    stop("AdaptR has not run. Could not call the dll.")
-  if(AdaptR.out == -2 )
-    stop("AdaptR has not run because the parameter file is formatted incorrectly.")  
-  if(AdaptR.out == -1 )
-    stop("AdaptR has not run because the parameter file does not exist.")  
+ # if(AdaptR.out == -3 )
+ #   stop("AdaptR has not run. Could not call the dll.")
+ # if(AdaptR.out == -2 )
+ #   stop("AdaptR has not run because the parameter file is formatted incorrectly.")  
+ # if(AdaptR.out == -1 )
+ #   stop("AdaptR has not run because the parameter file does not exist.")  
   
   message(paste0("AdaptR completed. The results are in the specified output folder."))
   

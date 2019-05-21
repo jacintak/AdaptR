@@ -1,0 +1,10 @@
+NCOLS 100
+NROWS 79
+NUM_ENVIRONMENT_VARIABLES 2
+NUM_TIME_POINTS 159
+ENV_NAME_FILES
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/Tmax/Tmax_filenames.txt
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/Habitat/Habitat_filenames.txt
+OUTPUT_NAME_FILE
+C:/Users/admin/Documents/TCD/AdaptR/inst/extdata/compact_grids/demo_compact_grids_output_filenames.txt
+PERCENTAGE_SUCCESS 100

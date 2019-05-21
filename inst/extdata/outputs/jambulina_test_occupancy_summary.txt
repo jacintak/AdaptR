@@ -1,0 +1,2 @@
+Time Cells_Occupied Initial_Cells_Occupied Not_initial_Cells_Occupied Mean_Z_Env_1 Mean_Vp_Env_1 
+0 4570 4570 0 37.9455 1.106 

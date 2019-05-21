@@ -4,7 +4,7 @@
 \alias{plot.range.single.run}
 \title{Generate summary plot of range dynamics from a single run of AdpatR}
 \usage{
-\method{plot}{range.single.run}(output.folder.path = getwd(), run.name)
+plot.range.single.run(output.folder.path = getwd(), run.name)
 }
 \arguments{
 \item{output.folder.path}{The directory where the output files are stored}
